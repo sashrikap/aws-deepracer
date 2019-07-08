@@ -1,0 +1,354 @@
+import numpy as np
+import matplotlib.pyplot as plt 
+import math
+
+#create list of waypoints
+def createWaypoints():
+            
+            #self.waypoints = vertices = np.zeros((30, 2))
+            waypoints = vertices = np.zeros((30, 2))
+
+            #self.road_width = 0.44
+            road_width = 0.44
+            
+            #start of linear 1
+            vertices[0][0] = 1.5;     vertices[0][1] = 0.58;
+            
+            #stop of linear 1 and start of curve 1
+            vertices[1][0] = 5.5;     vertices[1][1] = 0.58;
+            vertices[2][0] = 5.6;     vertices[2][1] = 0.6;
+            vertices[3][0] = 5.7;     vertices[3][1] = 0.65;
+            vertices[4][0] = 5.8;     vertices[4][1] = 0.7;
+            vertices[5][0] = 5.9;     vertices[5][1] = 0.8;
+            vertices[6][0] = 6.0;     vertices[6][1] = 0.9;
+            vertices[7][0] = 6.08;    vertices[7][1] = 1.1;
+            vertices[8][0] = 6.1;     vertices[8][1] = 1.2;
+            vertices[9][0] = 6.1;     vertices[9][1] = 1.3;
+            vertices[10][0] = 6.1;    vertices[10][1] = 1.4;
+            vertices[11][0] = 6.07;   vertices[11][1] = 1.5;
+            vertices[12][0] = 6.05;   vertices[12][1] = 1.6;
+            vertices[13][0] = 6;      vertices[13][1] = 1.7;
+            vertices[14][0] = 5.9;    vertices[14][1] = 1.8;
+            vertices[15][0] = 5.75;   vertices[15][1] = 1.9;
+            
+            #stop of curve 1, start linear 2
+            vertices[16][0] = 5.6;    vertices[16][1] = 2.0;
+            
+            
+            vertices[17][0] = 4.2;    vertices[17][1] = 2.02;
+            vertices[18][0] = 4;      vertices[18][1] = 2.1;
+            vertices[19][0] = 2.6;    vertices[19][1] = 3.92;
+            vertices[20][0] = 2.4;    vertices[20][1] = 4;
+            vertices[21][0] = 1.2;    vertices[21][1] = 3.95;
+            vertices[22][0] = 1.1;    vertices[22][1] = 3.92;
+            vertices[23][0] = 1;      vertices[23][1] = 3.88;
+            vertices[24][0] = 0.8;    vertices[24][1] = 3.72;
+            vertices[25][0] = 0.6;    vertices[25][1] = 3.4;
+            vertices[26][0] = 0.58;   vertices[26][1] = 3.3;
+            vertices[27][0] = 0.57;   vertices[27][1] = 3.2;
+            vertices[28][0] = 1;      vertices[28][1] = 1;
+            vertices[29][0] = 1.25;   vertices[29][1] = 0.7;
+            
+            return waypoints
+
+def createJupyterWaypoints():
+    waypoints = [[290.99952836, 68.31924746],
+    [331.99952312, 68.33390534],
+    [341.99952184, 68.33748043],
+    [363.00023417, 68.34498838],
+    [418.999512, 68.36500863],
+    [450.00022305, 68.37609167],
+    [454.9995074, 68.37787896],
+    [532.00021257, 68.40540742],
+    [542.00021129, 68.40898251],
+    [578.00020669, 68.42185284],
+    [628.97478581, 69.21400142],
+    [646.09064847, 71.23063543],
+    [651.36980597, 72.10294116],
+    [670.42878715, 79.95986723],
+    [683.62817757, 88.1700479 ],
+    [699.16633627, 100.62653215],
+    [711.42074641, 116.93225138],
+    [716.58306823, 126.34267567],
+    [728.00197418, 176.28308313],
+    [727.28922087, 181.32370039],
+    [726.59607013, 186.22568749],
+    [710.45747674, 230.14874894],
+    [701.17490088, 241.92602929],
+    [672.72737128, 264.74924752],
+    [653.69212168, 272.66447611],
+    [607.98021787, 277.33607733],
+    [591.98136513, 277.2005975 ],
+    [571.9827992, 277.0312477 ],
+    [567.00009269, 276.98905365],
+    [520.00346276, 276.59108163],
+    [504.98760333, 276.46392587],
+    [500.20308724, 276.89807146],
+    [494.27099943, 277.53278483],
+    [456.13401711, 289.8322513 ],
+    [425.85331087, 316.69552207],
+    [409.27285354, 337.03748558],
+    [400.11219698, 348.27636385],
+    [377.40000787, 376.14112734],
+    [368.23935131, 387.38000561],
+    [354.90587459, 403.73836603],
+    [327.58532951, 433.32953234],
+    [319.11463584, 438.56848257],
+    [309.54945192, 443.59223051],
+    [295.49738926, 448.4413606 ],
+    [280.898223, 450.00386546],
+    [281.10045576, 449.98320294],
+    [250.03276964, 449.87181636],
+    [224.93775661, 449.14289728],
+    [199.01771787, 448.3900142 ],
+    [173.95172673, 447.66193811],
+    [118.71156115, 439.17929302],
+    [110.54389399, 434.02307342],
+    [73.16196323, 381.96588383],
+    [70.80468874, 352.95953183],
+    [87.47319412, 272.51244177],
+    [88.63119621, 266.92358446],
+    [91.80990439, 251.58220759],
+    [93.80374746, 241.9593368 ],
+    [102.12099342, 201.81787127],
+    [104.30635529, 191.27067468],
+    [109.36256517, 166.86792455],
+    [121.97244135, 116.98894121],
+    [124.04620135, 111.8211037 ],
+    [128.66114043, 102.70193377],
+    [131.9534425 , 98.95904729],
+    [138.97426106, 90.97735962],
+    [145.63853812, 84.35308547],
+    [149.96428711, 81.93608402],
+    [204.00025449, 68.28814442],
+    [275.00024542, 68.31352757],
+    [290.99952836, 68.31924746]]
+    
+    vertices = np.zeros((71,2))
+    
+    count = 0
+    while(count < 71):
+        vertices[count][0] = (waypoints[count][0])/100  
+        vertices[count][1] = (waypoints[count][1])/100
+        count +=1
+        
+    return vertices
+           
+#def createGraph(points1, label1, points2, label2, points3, label3):
+def createGraph(listToGraph): 
+            stuffToPlot = []
+            markers = ["*", "o", "+"]
+            colors = ["green", "red", "blue"]
+            
+            for i in range(0, int(len(listToGraph)/2)):
+                        x_temp = []
+                        y_temp = []
+                        placeHolder = listToGraph[2*i]
+                        myLabel = listToGraph[2*i + 1]
+                        for j in range(0, len(placeHolder)):
+                                    x_temp.append(placeHolder[j][0])
+                                    y_temp.append(placeHolder[j][1])
+                        stuffToPlot.append(x_temp)
+                        stuffToPlot.append(y_temp)
+                        stuffToPlot.append(myLabel)
+                                                  
+            ## x-axis values
+            #x1 = []
+            #y1 = []
+            #for i in range(0, len(points1)):
+                        #x1.append(points1[i][0])
+                        #y1.append(points1[i][1])              
+            
+            #x2 = []
+            #y2 = []
+            #for i in range(0, len(points2)):
+                        #x2.append(points2[i][0])
+                        #y2.append(points2[i][1])  
+            
+            #x3 = []
+            #y3 = []
+            #for i in range(0, len(points3)):
+                        #x3.append(points3[i][0])
+                        #y3.append(points3[i][1])            
+              
+            # plotting points as a scatter plot
+            for k in range(0, int(len(stuffToPlot) / 3)):
+                        x_coord = stuffToPlot[3 * k]
+                        y_coord = stuffToPlot[3 * k + 1]
+                        myLabel = stuffToPlot[3 * k + 2]
+                        plt.scatter(x_coord, y_coord, label= myLabel, color= colors[k % 3],  marker= markers[k % 3], s=30) 
+            
+            
+            #plt.scatter(x2, y2, label= label2, color= "red",  marker= "o", s=30) 
+            #plt.scatter(x3, y3, label= label3, color= "blue",  marker= "+", s=30) 
+            
+            # x-axis label 
+            plt.xlabel('x - axis') 
+            # frequency label 
+            plt.ylabel('y - axis') 
+            # plot title 
+            plt.title('DeepRacer Track Waypoints') 
+            # showing legend 
+            plt.legend() 
+              
+            # function to show the plot 
+            plt.show()     
+
+#let's define all of the pieces of the track, starting with the first, long linear function
+#these functions will return n evenly-placed intermediate points along the curve
+#based on the parameter t, which ranges from 0 to 1
+
+#this function will give the desired number of intermediate points
+#along the linear segment connecting (start_x, start_y) and (stop_x, stop_y)
+
+#this function will create intermediate waypoints for the following track segments:
+#f1, f3, f5, f7, f9
+def linearFunctions(start_x, start_y, stop_x, stop_y, n):
+            listOfPoints = []
+            counter = 0
+            while counter <= n:
+                        newPoint = [start_x * (1 - counter / n) + stop_x * (counter / n), start_y * (1 - counter / n) + stop_y * (counter / n) ]
+                        listOfPoints.append(newPoint)
+                        counter = counter + 1
+            return listOfPoints
+
+
+#def this function will parameterize the semi-circle given the starting and stopping
+#points, the angle (in degrees), and the number of intermediate points, n
+#this function uses the law of cosines: a^2 + b^2 - 2abcos(theta) = c^2
+#we calculate c^2 from the starting and stopping coordinates, and then determine
+#a using the formula
+def generalCurve(start_x, start_y, stop_x, stop_y, theta, n, center_below, sweep_clockwise,hack):
+            
+            #convert theta from degrees to radians
+            theta_radians = math.radians(theta)
+            
+            #determine a
+            #step 1: compute c using the distance formula
+            c = ((start_x - stop_x)**2 + (start_y - stop_y)**2)**0.5
+            
+            #i will also need the midpoint for later on in the calculation of the center
+            mid_x = (start_x + stop_x)/2
+            mid_y = (start_y + stop_y)/2
+            
+            #compute radius using the law of cosines:
+            radius = c / (2 * (1 - math.cos(theta_radians)))**.5
+            
+            if center_below == True:
+                        mySign = 1
+                        startAngle = 0
+            else:
+                        mySign = -1
+                        startAngle = math.pi
+            if hack == True:
+                        startAngle = theta_radians - math.pi
+                        
+            if sweep_clockwise == True:
+                        clockwiseSign = 1
+            else:
+                        clockwiseSign = -1
+            if hack == True:
+                        clockwiseSign = -1
+
+                        
+            
+            #determine the coordinates of the center of the circle
+            center_x = mid_x + mySign * ((radius**2 - (c/2)**2)**0.5) * (start_y - stop_y)/c
+            center_y = mid_y + mySign * ((radius**2 - (c/2)**2)**0.5) * (stop_x - start_x)/c
+            
+            print(radius, mid_x, mid_y, c, center_x, center_y)
+            
+            #next, determine the equation of the 
+            listOfPoints = []
+            counter = 0
+            
+            
+            sectorSize = theta_radians / n
+            while counter <= n:
+
+                        newPoint = [radius * math.sin(startAngle + clockwiseSign * counter * sectorSize) + center_x, radius * math.cos(startAngle + clockwiseSign * counter * sectorSize) + center_y]
+
+                        listOfPoints.append(newPoint)
+                        counter = counter + 1
+            print(listOfPoints)
+            return listOfPoints 
+
+def bezierFormula(a,c,e,t):
+            return a * (1 - t)**2 + 2 * c * t * (1 - t) + e * t**2
+
+def getBezierCurve(p1, p2, p3, n): 
+            
+            listOfPoints = []
+            counter = 0
+            intervalSize = 1 / n
+            
+            while counter <= n:
+                        newPoint = [bezierFormula(p1[0], p2[0], p3[0], counter * intervalSize), bezierFormula(p1[1], p2[1], p3[1], counter * intervalSize)]
+                        listOfPoints.append(newPoint)
+                        counter = counter + 1
+            return listOfPoints
+
+def createCombinedPlot(n):
+            points1 = createWaypoints()
+            jpoints1 = createJupyterWaypoints()
+            
+            #generalCurve(start_x, start_y, stop_x, stop_y, theta, n, center_below, sweep_clockwise, hack)
+            #curve1 should start at waypoint 1 and end at the end of the semi-circle
+            #TODO: CHANGE THESE STARTING AND STOPPING POINTS TO BE OBTAINED FROM THE WAYPOINTS THEMSELVES
+            #START: 5.5 --> points1[1][0], .58 --> points[1][1]
+            #STOP: 5.6 --> points1[16][0]
+            #curve1 = generalCurve(5.5, .58, 5.6, 2.0, 180, n, False, False, False)
+            #curve1 = generalCurve(points1[1][0], points1[1][1], points1[16][0], points1[16][1], 180, n, False, False, False)
+            #curve 2 should be the semi-circle
+            #curve2 = generalCurve(4.2, 2.02, 4, 2.1, 51, n, False, True, False)
+#             curve2 = generalCurve(.646, .0712, .654, .273, 51, n, False, True, False)
+            
+#             #curve 3 should be the next curve on the track
+#             curve3 = generalCurve(2.6, 3.92, 2.4, 4, 53, n, True, True, False)
+            
+#             #curve 4 should be the next curve on the track
+#             curve4 = generalCurve(1.2, 3.95, .57, 3.2, 100, n, True, False, False)
+            
+#             #curve 5 is the last curve on the track
+#             curve5 = generalCurve(1, 1, 1.5, .58, 78, n, True, True, True)
+
+            jcurve1 = generalCurve(jpoints1[11][0], jpoints1[11][1], jpoints1[29][0], jpoints1[29][1], 180, n, False, False, False)
+            jcurve2 = generalCurve(jpoints1[32][0], jpoints1[32][1], jpoints1[36][0], jpoints1[36][1], 180, n, False, True, False)
+            jcurve3 = generalCurve(jpoints1[42][0], jpoints1[42][1], jpoints1[46][0], jpoints1[46][1], 180, n, True, True, False)
+            jcurve4 = generalCurve(jpoints1[50][0], jpoints1[50][1], jpoints1[54][0], jpoints1[54][1], 180, n, True, False, False)
+            jcurve4 = generalCurve(jpoints1[62][0], jpoints1[62][1], jpoints1[70][0], jpoints1[70][1], 180, n, True, True, True)
+            
+            
+            #linearFunctions(start_x, start_y, stop_x, stop_y, n):
+            
+            #straight 1 should start at waypoint 1 and end where curve 1 begins
+            #straight1 = linearFunctions(1.5, .58, 5.5, .58, 12)
+#             straight2 = linearFunctions(5.6, 2.0, 4.2, 2.02, 8)
+#             straight3 = linearFunctions(4, 2.1, 2.6, 3.92, 12)
+#             straight4 = linearFunctions(2.4, 4, 1.2, 3.95, 8)
+#             straight5 = linearFunctions(.57, 3.2, 1, 1, 12)
+#             points2 = []
+#             for i in range(0, len(points1) - 2):
+#                         if i % 2 == 0:
+#                                     points2 = points2 + getBezierCurve(points1[i], points1[i + 1], points1[i + 2], n)
+#             print(points2)
+#             p1 = points1[len(points1) - 2]
+#             p2 = points1[len(points1) - 1]
+#             p3 = points1[0]
+            
+#             points2 = points2 + getBezierCurve(p1, p2, p3, n)
+
+            jstraight1 = linearFunctions(jpoints1[0][0], jpoints1[0][1], jpoints1[11][0], jpoints1[11][1], 12)
+            jstraight2 = linearFunctions(jpoints1[29][0], jpoints1[29][1], jpoints1[32][0], jpoints1[32][1], 12)
+            jstraight3 = linearFunctions(jpoints1[36][0], jpoints1[36][1], jpoints1[42][0], jpoints1[42][1], 12)
+            jstraight4 = linearFunctions(jpoints1[46][0], jpoints1[46][1], jpoints1[50][0], jpoints1[50][1], 12)
+            jstraight5 = linearFunctions(jpoints1[54][0], jpoints1[54][1], jpoints1[62][0], jpoints1[62][1], 12)
+            #straight 2 should connect the next two arcs together
+            
+            #points3 = curve1 + curve2 + curve3 + curve4 + curve5 + straight1 + straight2 + straight3 + straight4 + straight5
+            jcurves = jcurve1
+            #+ jcurve2 + jcurve3 + jcurve4 + jcurve5 + jstraight1 + jstraight2 + jstraight3 + jstraight4 + jstraight5
+            #curve2 + curve3 + curve4 + curve5 + straight1 + straight2 + straight3 + straight4 + straight5
+            
+            listToGraph = [jpoints1, "jupyter", jcurves, "jupyter curves"]
+            createGraph(listToGraph)
