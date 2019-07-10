@@ -43,43 +43,62 @@ def reward_function(params):
     next_pt = waypoints[closest_waypoints[1]] # closest waypoint ahead of car
     nextnext_pt = waypoints[(closest_waypoints[1] + 1) % len(waypoints)] # waypoint after next_pt
     
+    curveCalculation = True
+    
     # Determining curvature
     myNumerator = (next_pt[0] - prev_pt[0])*(prev_pt[0] - 2 * next_pt[0] + nextnext_pt[0]) + (next_pt[1] - prev_pt[1])*(prev_pt[1] - 2 * next_pt[1] + nextnext_pt[1])
     myDenominator = (prev_pt[0] - 2 * next_pt[0] + nextnext_pt[0])**2 + (prev_pt[1] - 2 * next_pt[1] + nextnext_pt[1])**2
     
     #assuming that myDenominator does not equal zero
-    curvatureTime = myNumerator / myDenominator
-    x_prime = 2 * prev_pt[0] * (curvatureTime - 1) + 2 * next_pt[0] - 4 * next_pt[0] * curvatureTime + 2 * nextnext_pt[0] * curvatureTime
-    x_double_prime = 2 * prev_pt[0] - 4 * next_pt[0] + 2 * nextnext_pt[0]
-    y_prime = 2 * prev_pt[1] * (curvatureTime - 1) + 2 * next_pt[1] - 4 * next_pt[1] * curvatureTime + 2 * nextnext_pt[1] * curvatureTime
-    y_double_prime = 2 * prev_pt[1] - 4 * next_pt[1] + 2 * nextnext_pt[1]   
-    temp_value = (x_prime**2 + y_prime**2)**1.5
+    if (myDenominator != 0):
+        curvatureTime = myNumerator / myDenominator
+        x_prime = 2 * prev_pt[0] * (curvatureTime - 1) + 2 * next_pt[0] - 4 * next_pt[0] * curvatureTime + 2 * nextnext_pt[0] * curvatureTime
+        x_double_prime = 2 * prev_pt[0] - 4 * next_pt[0] + 2 * nextnext_pt[0]
+        y_prime = 2 * prev_pt[1] * (curvatureTime - 1) + 2 * next_pt[1] - 4 * next_pt[1] * curvatureTime + 2 * nextnext_pt[1] * curvatureTime
+        y_double_prime = 2 * prev_pt[1] - 4 * next_pt[1] + 2 * nextnext_pt[1]   
+        temp_value = (x_prime**2 + y_prime**2)**1.5
     
-    #assuming that temp_value does not equal zero
-    curvature = abs(x_prime * y_double_prime - x_double_prime * y_prime) / temp_value   
+        #assuming that temp_value does not equal zero
+        if temp_value != 0:
+            curvature = abs(x_prime * y_double_prime - x_double_prime * y_prime) / temp_value
+        else:
+            curveCalculation = False
+    else:
+        curveCalculation = False
     
     # Find out whether track is straight or curved
-    if curvature < 1.0*10^(-4):
-        # track is straight
-        # reward speed on straight track
+    if curveCalculation:
+        if curvature < .0001:
+            # track is straight
+            # reward speed on straight track
+            reward += min(speed**2, 10)
+            # Give higher reward if the car is closer to center line 
+            if distance_from_center <= marker_1:
+                reward += 5
+            elif distance_from_center <= marker_2:
+                reward += 1
+            if steering < 15:
+                reward += 5
+
+        else:
+            #track is curved, reward for being somewhat centered
+            if distance_from_center <= marker_3:
+                reward += 5
+            if steering < 30:
+                reward += 5 
+            if speed > 2:
+                reward += 3
+            elif speed > 1:
+                reward += 1
+    else:
+        #reward based on straight track criteria
         reward += min(speed**2, 10)
         # Give higher reward if the car is closer to center line 
         if distance_from_center <= marker_1:
             reward += 5
         elif distance_from_center <= marker_2:
             reward += 1
-            
         if steering < 15:
             reward += 5
-    elif speed > 2:
-        #reward speed on curved track
-        reward += 2
-    
-    if curvature < 1.0*10^(-4):
-        #track is curved, reward for being somewhat centered
-        if distance_from_center <= marker_3:
-            reward += 5
-        if steering < 30:
-            reward += 5    
     
     return float(reward)
