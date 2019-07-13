@@ -1,7 +1,4 @@
-# curvature based off of RewardFunction_6
-
-# based on RewardFunction_1 / Summer2019FirstModel
-
+# based on RewardFunction_9 / Summer2019FirstModel
 
 def reward_function(params):
 
