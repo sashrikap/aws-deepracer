@@ -65,7 +65,4 @@ def reward_function(params):
         # track is straight
         reward += (speed**3)/3.75 + (900 * max(progress, .01))/(steps**2 + 1)**.5
     
-    if is_left_of_center:
-        reward += 1
-    
     return float(reward)
