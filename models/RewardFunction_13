@@ -1,9 +1,5 @@
 def reward_function(params):
-
-    '''
-    Curvature calculations are based on vector calculations
-    '''
-   
+    
     # Read input parameters
     #x_car = params['x']
     #y_car = params['y']
@@ -35,34 +31,49 @@ def reward_function(params):
         return REWARD_MAX * TARGET_STEPS / steps
     else:        
         reward = REWARD_MAX * max(progress, 0.4)
-    
-    # Determine waypoints
-    prev_pt = waypoints[closest_waypoints[0]] # closest waypoint behind car
-    next_pt = waypoints[closest_waypoints[1]] # closest waypoint ahead of car
-    nextnext_pt = waypoints[(closest_waypoints[1] + 1) % len(waypoints)] # waypoint after next_pt
-    
-    prev_next_dist = ((prev_pt[0] - next_pt[0])**2 + (prev_pt[1] - next_pt[1])**2)**0.5    
-    next_nextnext_dist = ((next_pt[0] - nextnext_pt[0])**2 + (next_pt[1] - nextnext_pt[1])**2)**0.5   
-    prev_nextnext_dist = ((prev_pt[0] - nextnext_pt[0])**2 + (prev_pt[1] - nextnext_pt[1])**2)**0.5
         
-    # Find out whether track is straight or curved using vector curvature calculations
-    vect_numerator = (nextnext_pt[0]-next_pt[0])*(next_pt[0]-prev_pt[0]) + (nextnext_pt[1]-next_pt[1])*(next_pt[1]-prev_pt[1])
-    vect_denominator = ((((next_pt[0]-prev_pt[0])**2) + ((next_pt[1]-prev_pt[1])**2))**.5) * ((((nextnext_pt[0]-next_pt[0])**2) + ((nextnext_pt[1]-next_pt[1])**2))**.5)
-    vect_curvature = abs(vect_numerator/vect_denominator)
+    # Determine waypoints
+    way0 = waypoints[closest_waypoints[0]] # closest waypoint behind car
+    way1 = waypoints[closest_waypoints[1]] # closest waypoint ahead of car
+    way2 = waypoints[(closest_waypoints[1] + 1) % len(waypoints)] # waypoint after next_pt
     
-    # Find out if waypoints are close to each other; if they are close, then assume track is curved
-    wp_close_numerator = (((nextnext_pt[0] - next_pt[0])**2) + ((nextnext_pt[1] - next_pt[1])**2))**.5
-    wp_close_denominator = (((next_pt[0] - prev_pt[0])**2) + ((next_pt[1] - prev_pt[1])**2))**.5
-    wp_close_value = wp_close_numerator/wp_close_denominator
+    vector1 = [way1[0] - way0[0], way1[1] - way0[1]]
+    vector2 = [way2[0] - way1[0], way2[1] - way1[1]]
     
-    if (vect_curvature < .99) and (wp_close_value > .99):
+    dist1 = (vector1[0]**2 + vector1[1]**2)**0.5    
+    dist2 = (vector2[0]**2 + vector2[1]**2)**0.5 
+    
+    trackCurved = False
+    if (dist2 > 0 and dist1 > 0):
+        #we will analyze the relative distances between waypoints
+        #compute the cosine of the angle between the vectors connecting consecutive waypoints
+        cosineAngle = abs(vector1[0]*vector2[0] + vector1[1]*vector2[1]) / (dist1 * dist2)
+        #cosineAngle will be closer to 1 if the curve is mostly straight
+        if cosineAngle < 0.99:
+            #the track might be curved
+            ratio = abs(dist2 - dist1)/(dist2 + dist1)
+            #the track might be curved if these consecutive waypoints are relatively close together
+            #if dist1 and dist2 are close to the same values, ratio will be very small.
+            #use a cutoff of 0.2 to decide that the angle between waypoint vectors is noticable
+            #so we'll look at the relative spacing between waypoints
+            if ratio < 0.2:
+                #this is the only way that we will consider the track curved
+                trackCurved = True 
+    
+    if trackCurved:
         # track is curved
         if distance_from_center <= marker_2:
             reward += 5 + (500 * max(progress, .01))/(steps**2 + 1)**.5
         elif distance_from_center <= marker_3:
             reward += 3 + (500 * max(progress, .01))/(steps**2 + 1)**.5
     else:
-        # track is straight
+        #assume track is straight
         reward += (speed**3)/3.75 + (900 * max(progress, .01))/(steps**2 + 1)**.5
+   
+    if is_left_of_center:
+        #throw in something if the car is left of center, just to see if we can
+        #reinforce that lane position...it should just be a little reward, especially
+        #when compared to the reward for speed and steps
+        reward += 1
     
     return float(reward)
