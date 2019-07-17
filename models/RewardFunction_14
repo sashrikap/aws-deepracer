@@ -53,9 +53,7 @@ def reward_function(params):
         trackStraight = False
     
     # Reward based on whether track is straight or curved
-    if trackStraight:
-        #track is straight
-        reward += (speed**2) + (progress*900/(((steps**2) + 1)**.5))
+
     else:
         #track is curved
         if distance_from_center <= marker_2:
@@ -63,8 +61,5 @@ def reward_function(params):
         elif distance_from_center <= marker_3:
             reward += 3
         reward += ((500*progress)/(((steps**2) + 1)**.5))
-    
-    if is_left_of_center:
-        reward += 1
     
     return float(reward)
