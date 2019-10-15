@@ -7,3 +7,4 @@ Through studying combinations of variables and their effects on a virtual car's 
 ## Built with
 Python, Jupyter Notebooks
 Log analysis files were developed using a template provided by Amazon Web Services, which can be found <a href="https://github.com/aws-samples/aws-deepracer-workshops">here</a>.
+Research poster available online.
