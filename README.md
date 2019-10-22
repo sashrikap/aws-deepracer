@@ -1,7 +1,7 @@
 # AWS DeepRacer 
 Reward functions developed using reinforcement learning for Amazon Web Services' DeepRacer. University of Iowa Secondary Student Training Program, 2019.
 
-Research brief can be found <a href="https://sashrikapandey.me/uploads/Pandey_Sashrika_research_brief.pdf">here</a>.
+Research brief can be found <a href="https://sashrikapandey.me/uploads/Pandey_Sashrika_research_brief.pdf">here</a>.<br>
 Research poster can be found <a href="https://sashrikapandey.me/uploads/Pandey_Sashrika_academic_poster.pdf">here</a>.
 
 ## Overview
